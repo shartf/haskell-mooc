@@ -22,4 +22,5 @@ library
                , warp==3.3.31
                , sqlite-simple==0.4.19.0
                , parallel==3.2.2.0
+               , fourmolu
   default-language: Haskell2010
