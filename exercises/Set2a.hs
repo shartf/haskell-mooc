@@ -47,9 +47,9 @@ takeFinal n xs = reverse $ take n $ reverse xs
 
 updateAt :: Int -> a -> [a] -> [a]
 updateAt i x xs
-  | i == 0 = [x] ++ tail xs
-  | i == (length xs) - 1 = init xs ++ [x]
-  | otherwise = take i xs ++ [x] ++ drop i xs
+    | i == 0 = [x] ++ tail xs
+    | i == (length xs) - 1 = init xs ++ [x]
+    | otherwise = take i xs ++ [x] ++ drop (i + 1) xs
 
 ------------------------------------------------------------------------------
 -- Ex 4: substring i j s should return the substring of s starting at
@@ -63,7 +63,8 @@ updateAt i x xs
 --   substring 0 4 "abcdefgh"  ==>  "abcd"
 
 substring :: Int -> Int -> String -> String
-substring i j s = todo
+-- substring i j s = take (j - i) (snd (splitAt i s))
+substring i j s = [x | (st, x) <- zip [0 ..] s, st >= i && st < j]
 
 ------------------------------------------------------------------------------
 -- Ex 5: check if a string is a palindrome. A palindrome is a string
@@ -78,7 +79,9 @@ substring i j s = todo
 --   isPalindrome "AB"       ==>  False
 
 isPalindrome :: String -> Bool
-isPalindrome str = todo
+isPalindrome str
+    | (reverse str) == str = True
+    | otherwise = False
 
 ------------------------------------------------------------------------------
 -- Ex 6: implement the function palindromify that chops a character
@@ -92,7 +95,14 @@ isPalindrome str = todo
 --   palindromify "abracacabra" ==> "acaca"
 
 palindromify :: String -> String
-palindromify s = todo
+palindromify s
+    | isPalindrome s = s
+    | otherwise = palindromify (chewOff s)
+  where
+    chewOff :: String -> String
+    chewOff str
+        | length str <= 1 = str
+        | otherwise = init (tail str)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement safe integer division, that is, a function that
@@ -105,7 +115,9 @@ palindromify s = todo
 --   safeDiv 4 0  ==> Nothing
 
 safeDiv :: Integer -> Integer -> Maybe Integer
-safeDiv x y = todo
+safeDiv x y
+    | y == 0 = Nothing
+    | otherwise = Just (div x y)
 
 ------------------------------------------------------------------------------
 -- Ex 8: implement a function greet that greets a person given a first
