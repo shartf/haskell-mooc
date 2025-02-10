@@ -129,10 +129,11 @@ safeDiv x y
 --   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
 
 greet :: String -> Maybe String -> String
-greet first last = todo
+greet first Nothing = "Hello, " ++ first ++ "!"
+greet first (Just second) = "Hello, " ++ first ++ " " ++ second ++ "!"
 
 ------------------------------------------------------------------------------
--- Ex 9: safe list indexing. Define a function safeIndex so that
+-- 5 Ex 9: safe list indexing. Define a function safeIndex so that
 --   safeIndex xs i
 -- gets the element at index i in the list xs. If i is not a valid
 -- index, Nothing is returned.
@@ -145,7 +146,9 @@ greet first last = todo
 --   safeIndex ["a","b","c"] (-1)  ==> Nothing
 
 safeIndex :: [a] -> Int -> Maybe a
-safeIndex xs i = todo
+safeIndex xs i
+    | i < length xs && i >= 0 = Just (xs !! i)
+    | otherwise = Nothing
 
 ------------------------------------------------------------------------------
 -- Ex 10: another variant of safe division. This time you should use
