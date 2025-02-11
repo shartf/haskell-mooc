@@ -16,7 +16,10 @@ import Data.List
 -- Hint! pattern matching is your friend.
 
 binomial :: Integer -> Integer -> Integer
-binomial = todo
+binomial n k
+    | k == 0 = 1
+    | n == 0 && k > 0 = 0
+    | otherwise = binomial (n - 1) k + binomial (n - 1) (k - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement the odd factorial function. Odd factorial is like
@@ -27,17 +30,25 @@ binomial = todo
 --   oddFactorial 6 ==> 5*3*1 ==> 15
 
 oddFactorial :: Integer -> Integer
-oddFactorial = todo
+oddFactorial n
+    | n <= 0 = 1
+    | odd n = n * oddFactorial (n - 2)
+    | otherwise = oddFactorial (n - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 3: implement the Euclidean Algorithm for finding the greatest
 -- common divisor:
 --
 -- Given two numbers, a and b,
+
 -- * if one is zero, return the other number
+
 -- * if not, subtract the smaller number from the larger one
+
 -- * replace the larger number with this new number
+
 -- * repeat
+
 --
 -- For example,
 --   myGcd 9 12 ==> 3
@@ -56,6 +67,7 @@ oddFactorial = todo
 --   0      3
 --
 -- Background reading:
+
 -- * https://en.wikipedia.org/wiki/Euclidean_algorithm
 
 myGcd :: Integer -> Integer -> Integer
@@ -71,7 +83,9 @@ myGcd = todo
 --   leftpad "xxxxx" 3 ==> "xxxxx"
 --
 -- Tips:
+
 -- * you can combine strings with the ++ operator.
+
 -- * you can compute the length of a string with the length function
 
 leftpad :: String -> Int -> String
@@ -86,8 +100,11 @@ leftpad = todo
 --   countdown 4 ==> "Ready! 4... 3... 2... 1... Liftoff!"
 --
 -- Hints:
+
 -- * you can combine strings with the ++ operator
+
 -- * you can use the show function to convert a number into a string
+
 -- * you'll probably need a recursive helper function
 
 countdown :: Integer -> String
