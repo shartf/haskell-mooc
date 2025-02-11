@@ -159,7 +159,9 @@ safeIndex xs i
 --   eitherDiv 4 0   ==> Left "4/0"
 
 eitherDiv :: Integer -> Integer -> Either String Integer
-eitherDiv x y = todo
+eitherDiv x y
+    | y == 0 = Left (show x ++ "/" ++ show y)
+    | otherwise = Right (div x y)
 
 ------------------------------------------------------------------------------
 -- Ex 11: implement the function addEithers, which combines two values of type
@@ -176,4 +178,7 @@ eitherDiv x y = todo
 --   addEithers (Left "boom") (Left "fail") ==> Left "boom"
 
 addEithers :: Either String Int -> Either String Int -> Either String Int
-addEithers a b = todo
+addEithers (Right a) (Right b) = Right (a + b)
+addEithers (Left a) (Right _) = Left a
+addEithers (Right _) (Left b) = Left b
+addEithers (Left a) (Left _) = Left a
