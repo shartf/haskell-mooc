@@ -71,7 +71,10 @@ oddFactorial n
 -- * https://en.wikipedia.org/wiki/Euclidean_algorithm
 
 myGcd :: Integer -> Integer -> Integer
-myGcd = todo
+myGcd a b
+    | b == 0 = a
+    | a == 0 = b
+    | otherwise = if a > b then myGcd (a - b) b else myGcd a (b - a)
 
 ------------------------------------------------------------------------------
 -- Ex 4: Implement the function leftpad which adds space characters
@@ -89,7 +92,9 @@ myGcd = todo
 -- * you can compute the length of a string with the length function
 
 leftpad :: String -> Int -> String
-leftpad = todo
+leftpad str n
+    | n == length str = str
+    | otherwise = " " ++ leftpad str (n - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 5: let's make a countdown for a rocket! Given a number, you
@@ -108,7 +113,11 @@ leftpad = todo
 -- * you'll probably need a recursive helper function
 
 countdown :: Integer -> String
-countdown = todo
+countdown n = "Ready! " ++ cnt n
+  where
+    cnt :: Integer -> String
+    cnt 0 = " Liftoff!"
+    cnt n = show n ++ "... " ++ cnt (n - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 6: implement the function smallestDivisor that returns the
@@ -126,7 +135,13 @@ countdown = todo
 -- Hint: remember the mod function!
 
 smallestDivisor :: Integer -> Integer
-smallestDivisor = todo
+smallestDivisor n = countup 2
+  where
+    countup :: Integer -> Integer
+    countup i
+        | i * i > n = n
+        | n `mod` i == 0 = i
+        | otherwise = countup (i + 1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a function isPrime that checks if the given number
