@@ -182,5 +182,3 @@ addEithers (Right a) (Right b) = Right (a + b)
 addEithers (Left a) (Right _) = Left a
 addEithers (Right _) (Left b) = Left b
 addEithers (Left a) (Left _) = Left a
-
--- and it is the end of it
