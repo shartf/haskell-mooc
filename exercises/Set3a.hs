@@ -124,7 +124,10 @@ capitalizeFirst (x : xs) = toUpper x : xs
 --   * the function takeWhile
 
 powers :: Int -> Int -> [Int]
-powers k max = todo
+powers k max = takeWhile (<= max) (recpow k)
+
+recpow :: Int -> [Int]
+recpow k = 1 : map (k ^) [1 ..]
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a functional while loop. While should be a function
@@ -147,7 +150,9 @@ powers k max = todo
 --     ==> Avvt
 
 while :: (a -> Bool) -> (a -> a) -> a -> a
-while check update value = todo
+while check update value
+    | check value = while check update (update value)
+    | otherwise = value
 
 ------------------------------------------------------------------------------
 -- Ex 8: another version of a while loop. This time, the check
