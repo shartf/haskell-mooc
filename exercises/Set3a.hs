@@ -196,7 +196,10 @@ bomb x = Right (x - 1)
 -- Hint! This is a great use for list comprehensions
 
 joinToLength :: Int -> [String] -> [String]
-joinToLength = todo
+joinToLength n xs = filter (\x -> length x == n) (combinations xs)
+
+combinations :: [String] -> [String]
+combinations xs = [x ++ y | x <- xs, y <- xs, x /= y]
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the operator +|+ that returns a list with the first
@@ -209,6 +212,12 @@ joinToLength = todo
 --   [1,2,3] +|+ [4,5,6]  ==> [1,4]
 --   [] +|+ [True]        ==> [True]
 --   [] +|+ []            ==> []
+
+(+|+) :: [a] -> [a] -> [a]
+(+|+) [] [] = []
+(+|+) [] (y : _) = [y]
+(+|+) (x : _) [] = [x]
+(+|+) (x : _) (y : _) = [x, y]
 
 ------------------------------------------------------------------------------
 -- Ex 11: remember the lectureParticipants example from Lecture 2? We
@@ -225,7 +234,7 @@ joinToLength = todo
 --   sumRights [Left "bad!", Left "missing"]         ==>  0
 
 sumRights :: [Either a Int] -> Int
-sumRights = todo
+sumRights xs = sum $ map (either (const 0) id) xs
 
 ------------------------------------------------------------------------------
 -- Ex 12: recall the binary function composition operation
@@ -240,8 +249,8 @@ sumRights = todo
 --   multiCompose [reverse, tail, (++"bar")] "foo" ==> "raboo"
 --   multiCompose [(3*), (2^), (+1)] 0 ==> 6
 --   multiCompose [(+1), (2^), (3*)] 0 ==> 2
-
-multiCompose fs = todo
+multiCompose :: [a -> a] -> a -> a
+multiCompose fs = foldr (.) id fs
 
 ------------------------------------------------------------------------------
 -- Ex 13: let's consider another way to compose multiple functions. Given
@@ -261,8 +270,8 @@ multiCompose fs = todo
 --   multiApp concat [take 3, reverse] "race" ==> "racecar"
 --   multiApp id [head, (!!2), last] "axbxc" ==> ['a','b','c'] i.e. "abc"
 --   multiApp sum [head, (!!2), last] [1,9,2,9,3] ==> 6
-
-multiApp = todo
+-- multiApp :: [a -> a] -> [a -> a] -> a -> a
+multiApp f gs x = f [g x | g <- gs]
 
 ------------------------------------------------------------------------------
 -- Ex 14: in this exercise you get to implement an interpreter for a
@@ -294,7 +303,36 @@ multiApp = todo
 --
 -- The suprise will only work if you generate the return list directly
 -- using (:). If you build the list in an argument to a helper
--- function, the surprise won't work. See section 3.8 in the material.
+-- function, the surprise won't work. See section 3.8 in the
 
 interpreter :: [String] -> [String]
-interpreter commands = todo
+interpreter commands = snd $ foldl processCommand ([0, 0], []) commands
+
+processCommand :: ([Int], [String]) -> String -> ([Int], [String])
+processCommand (coords, output) command =
+    case command of
+        "up" -> (up coords, output)
+        "down" -> (down coords, output)
+        "right" -> (right coords, output)
+        "left" -> (left coords, output)
+        "printX" -> (coords, output ++ [printX coords])
+        "printY" -> (coords, output ++ [printY coords])
+        _ -> (coords, output) -- Ignore unknown commands
+
+up :: [Int] -> [Int]
+up [x, y] = [x, y + 1]
+
+down :: [Int] -> [Int]
+down [x, y] = [x, y - 1]
+
+right :: [Int] -> [Int]
+right [x, y] = [x + 1, y]
+
+left :: [Int] -> [Int]
+left [x, y] = [x - 1, y]
+
+printY :: [Int] -> String
+printY [x, y] = show y
+
+printX :: [Int] -> String
+printX [x, y] = show x
