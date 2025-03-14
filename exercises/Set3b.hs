@@ -20,7 +20,6 @@
 -- Feel free to use if-then-else, guards, and ordering functions (< and > etc.).
 --
 -- The tests will check that you haven't added imports :)
-
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Set3b where
@@ -39,7 +38,9 @@ import Mooc.Todo
 --   buildList 7 0 3 ==> [3]
 
 buildList :: Int -> Int -> Int -> [Int]
-buildList start count end = todo
+buildList start count end
+    | count == 0 = [end]
+    | otherwise = start : buildList start (count - 1) end
 
 ------------------------------------------------------------------------------
 -- Ex 2: given i, build the list of sums [1, 1+2, 1+2+3, .., 1+2+..+i]
@@ -49,7 +50,15 @@ buildList start count end = todo
 -- Ps. you'll probably need a recursive helper function
 
 sums :: Int -> [Int]
-sums i = todo
+sums i = helper 1 i
+  where
+    helper :: Int -> Int -> [Int]
+    helper current max
+        | current > max = []
+        | otherwise = sumTo current : helper (current + 1) max
+sumTo :: Int -> Int
+sumTo 0 = 0
+sumTo n = n + sumTo (n - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 3: define a function mylast that returns the last value of the
@@ -63,7 +72,9 @@ sums i = todo
 --   mylast 0 [1,2,3] ==> 3
 
 mylast :: a -> [a] -> a
-mylast def xs = todo
+mylast def [] = def
+mylast def [x] = x
+mylast def (_ : xs) = mylast def xs
 
 ------------------------------------------------------------------------------
 -- Ex 4: safe list indexing. Define a function indexDefault so that
@@ -130,9 +141,13 @@ merge xs ys = todo
 --
 -- That is, implement the function mymaximum that takes
 --
+
 -- * a function `bigger` :: a -> a -> Bool
+
 -- * a value `initial` of type a
+
 -- * a list `xs` of values of type a
+
 --
 -- and returns the biggest value it sees, considering both `initial`
 -- and all element in `xs`.
