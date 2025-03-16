@@ -6,14 +6,14 @@ module Set14a where
 import Mooc.Todo
 
 import Data.Bits
-import Data.Char
-import Data.Text.Encoding
-import Data.Word
-import Data.Int
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as TL
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
+import Data.Char
+import Data.Int
+import qualified Data.Text as T
+import Data.Text.Encoding
+import qualified Data.Text.Lazy as TL
+import Data.Word
 
 ------------------------------------------------------------------------------
 -- Ex 1: Greet a person. Given the name of a person as a Text, return
@@ -26,9 +26,11 @@ import qualified Data.ByteString.Lazy as BL
 -- Examples:
 --  greetText (T.pack "Martin Freeman") ==> "Hello, Martin Freeman!"
 --  greetText (T.pack "Benedict Cumberbatch") ==> "Hello, Benedict Cumber...!"
-
+-- READ: https://hackage.haskell.org/package/text-2.1.2/docs/Data-Text.html
 greetText :: T.Text -> T.Text
-greetText = todo
+greetText txt
+    | T.length txt > 15 = T.concat [(T.pack "Hello, "), T.take 15 txt]
+    | otherwise = T.concat [(T.pack "Hello, "), txt]
 
 ------------------------------------------------------------------------------
 -- Ex 2: Capitalize every second word of a Text.
@@ -127,4 +129,3 @@ countUtf8Chars = todo
 
 pingpong :: B.ByteString -> BL.ByteString
 pingpong = todo
-
