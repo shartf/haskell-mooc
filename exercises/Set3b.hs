@@ -92,7 +92,11 @@ mylast def (_ : xs) = mylast def xs
 --   indexDefault ["a","b","c"] (-1) "d" ==> "d"
 
 indexDefault :: [a] -> Int -> a -> a
-indexDefault xs i def = todo
+indexDefault xs i def
+    | i > 0 && (x : xs) = indexDefault xs (i - 1) def
+    | i == 0 && [x : xs] = x
+    | i < 0 = def
+    | otherwise = def
 
 ------------------------------------------------------------------------------
 -- Ex 5: define a function that checks if the given list is in
