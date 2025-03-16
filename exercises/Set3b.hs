@@ -92,11 +92,11 @@ mylast def (_ : xs) = mylast def xs
 --   indexDefault ["a","b","c"] (-1) "d" ==> "d"
 
 indexDefault :: [a] -> Int -> a -> a
-indexDefault xs i def
-    | i > 0 && (x : xs) = indexDefault xs (i - 1) def
-    | i == 0 && [x : xs] = x
+indexDefault (x : _) 0 _ = x
+indexDefault [] _ def = def
+indexDefault (_ : xs) i def
     | i < 0 = def
-    | otherwise = def
+    | otherwise = indexDefault xs (i - 1) def
 
 ------------------------------------------------------------------------------
 -- Ex 5: define a function that checks if the given list is in
@@ -112,7 +112,11 @@ indexDefault xs i def
 --   sorted [7,2,7] ==> False
 
 sorted :: [Int] -> Bool
-sorted xs = todo
+sorted [] = True
+sorted [_] = True
+sorted (x : y : xs)
+    | x > y = False
+    | otherwise = sorted (y : xs)
 
 ------------------------------------------------------------------------------
 -- Ex 6: compute the partial sums of the given list like this:
@@ -137,7 +141,11 @@ sumsOf xs = todo
 --   merge [1,1,6] [1,2]   ==> [1,1,1,2,6]
 
 merge :: [Int] -> [Int] -> [Int]
-merge xs ys = todo
+merge [] ys = ys
+merge xs [] = xs
+merge (x : xs) (y : ys)
+    | x <= y = x : merge xs (y : ys)
+    | otherwise = y : merge (x : xs) ys
 
 ------------------------------------------------------------------------------
 -- Ex 8: compute the biggest element, using a comparison function
