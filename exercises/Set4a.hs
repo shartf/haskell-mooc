@@ -16,11 +16,11 @@
 
 module Set4a where
 
-import Mooc.Todo
-import Data.List
-import Data.Ord
-import qualified Data.Map as Map
 import Data.Array
+import Data.List
+import qualified Data.Map as Map
+import Data.Ord
+import Mooc.Todo
 
 ------------------------------------------------------------------------------
 -- Ex 1: implement the function allEqual which returns True if all
@@ -34,8 +34,14 @@ import Data.Array
 -- PS. check out the error message you get with your implementation if
 -- you remove the Eq a => constraint from the type!
 
-allEqual :: Eq a => [a] -> Bool
-allEqual xs = todo
+allEqual :: (Eq a) => [a] -> Bool
+allEqual [] = True
+allEqual [_] = True
+allEqual (x : y : xs)
+    | x /= y = False
+    | otherwise = allEqual (y : xs)
+
+-- allEqual (x : xs)   = not (elem False (map (\y -> x == y) xs))
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement the function distinct which returns True if all
@@ -49,8 +55,15 @@ allEqual xs = todo
 --   distinct [1,1,2] ==> False
 --   distinct [1,2] ==> True
 
-distinct :: Eq a => [a] -> Bool
-distinct = todo
+distinct :: (Eq a) => [a] -> Bool
+distinct [] = True
+distinct [_] = True
+distinct (x : xs) = if notElem x xs then distinct xs else False
+  where
+    notElem _ [] = True
+    notElem x (y : ys)
+        | x == y = False
+        | otherwise = notElem x ys
 
 ------------------------------------------------------------------------------
 -- Ex 3: implement the function middle that returns the middle value
@@ -62,8 +75,8 @@ distinct = todo
 -- Examples:
 --   middle 'b' 'a' 'c'  ==> 'b'
 --   middle 1 7 3        ==> 3
-
-middle = todo
+middle :: (Ord a) => a -> a -> a -> a
+middle x y z = sort [x, y, z] !! 1
 
 ------------------------------------------------------------------------------
 -- Ex 4: return the range of an input list, that is, the difference
@@ -78,8 +91,8 @@ middle = todo
 --   rangeOf [4,2,1,3]          ==> 3
 --   rangeOf [1.5,1.0,1.1,1.2]  ==> 0.5
 
-rangeOf :: [a] -> a
-rangeOf = todo
+rangeOf :: (Ord a, Num a) => [a] -> a
+rangeOf xs = maximum xs - minimum xs
 
 ------------------------------------------------------------------------------
 -- Ex 5: given a (non-empty) list of (non-empty) lists, return the longest
@@ -96,8 +109,14 @@ rangeOf = todo
 -- Examples:
 --   longest [[1,2,3],[4,5],[6]] ==> [1,2,3]
 --   longest ["bcd","def","ab"] ==> "bcd"
-
-longest = todo
+longest :: (Ord a) => [[a]] -> [a]
+longest = foldl1 chooseLongest
+  where
+    chooseLongest xs ys
+        | length xs > length ys = xs
+        | length xs < length ys = ys
+        | head xs < head ys = xs
+        | otherwise = ys
 
 ------------------------------------------------------------------------------
 -- Ex 6: Implement the function incrementKey, that takes a list of
@@ -113,7 +132,7 @@ longest = todo
 --   incrementKey True [(True,1),(False,3),(True,4)] ==> [(True,2),(False,3),(True,5)]
 --   incrementKey 'a' [('a',3.4)] ==> [('a',4.4)]
 
-incrementKey :: k -> [(k,v)] -> [(k,v)]
+incrementKey :: k -> [(k, v)] -> [(k, v)]
 incrementKey = todo
 
 ------------------------------------------------------------------------------
@@ -128,7 +147,7 @@ incrementKey = todo
 -- Hint! you can use the function fromIntegral to convert the list
 -- length to a Fractional
 
-average :: Fractional a => [a] -> a
+average :: (Fractional a) => [a] -> a
 average xs = todo
 
 ------------------------------------------------------------------------------
@@ -171,10 +190,15 @@ freqs xs = todo
 -- to another.
 --
 -- However, the function should not perform the transfer if
+
 -- * the from account doesn't exist,
+
 -- * the to account doesn't exist,
+
 -- * the sum is negative,
+
 -- * or the from account doesn't have enough money.
+
 --
 -- Hint: there are many ways to implement this logic. Map.member or
 -- Map.notMember might help.
@@ -200,7 +224,7 @@ transfer from to amount bank = todo
 --   swap 2 3 (array (1,4) [(1,"one"),(2,"two"),(3,"three"),(4,"four")])
 --         ==> array (1,4) [(1,"one"),(2,"three"),(3,"two"),(4,"four")]
 
-swap :: Ix i => i -> i -> Array i a -> Array i a
+swap :: (Ix i) => i -> i -> Array i a -> Array i a
 swap i j arr = todo
 
 ------------------------------------------------------------------------------
