@@ -167,7 +167,10 @@ average xs = sum xs / fromIntegral (length xs)
 --     ==> "Lisa"
 
 winner :: Map.Map String Int -> String -> String -> String
-winner scores player1 player2 = todo
+winner scores player1 player2
+    | Map.lookup player1 scores > Map.lookup player2 scores = player1
+    | Map.lookup player2 scores > Map.lookup player1 scores = player2
+    | otherwise = player1
 
 ------------------------------------------------------------------------------
 -- Ex 9: compute how many times each value in the list occurs. Return
@@ -182,7 +185,7 @@ winner scores player1 player2 = todo
 --     ==> Map.fromList [(False,3),(True,1)]
 
 freqs :: (Eq a, Ord a) => [a] -> Map.Map a Int
-freqs xs = todo
+freqs xs = foldr (\x acc -> Map.alter (Just . maybe 1 (+ 1)) x acc) Map.empty xs
 
 ------------------------------------------------------------------------------
 -- Ex 10: recall the withdraw example from the course material. Write a
@@ -215,7 +218,16 @@ freqs xs = todo
 --     ==> fromList [("Bob",100),("Mike",50)]
 
 transfer :: String -> String -> Int -> Map.Map String Int -> Map.Map String Int
-transfer from to amount bank = todo
+transfer from to amount bank
+    | amount < 0 = bank
+    | Map.notMember from bank = bank
+    | Map.notMember to bank = bank
+    | (fromBalance from bank) < amount = bank
+    | otherwise = Map.adjust (+ amount) to (Map.adjust (\b -> b - amount) from bank)
+  where
+    fromBalance from bank = case Map.lookup from bank of
+        Nothing -> 0
+        Just balance -> balance
 
 ------------------------------------------------------------------------------
 -- Ex 11: given an Array and two indices, swap the elements in the indices.
@@ -225,7 +237,7 @@ transfer from to amount bank = todo
 --         ==> array (1,4) [(1,"one"),(2,"three"),(3,"two"),(4,"four")]
 
 swap :: (Ix i) => i -> i -> Array i a -> Array i a
-swap i j arr = todo
+swap i j arr = arr // [(i, arr ! j), (j, arr ! i)]
 
 ------------------------------------------------------------------------------
 -- Ex 12: given an Array, find the index of the largest element. You
@@ -236,4 +248,4 @@ swap i j arr = todo
 -- Hint: check out Data.Array.indices or Data.Array.assocs
 
 maxIndex :: (Ix i, Ord a) => Array i a -> i
-maxIndex = todo
+maxIndex arr = fst $ maximumBy (comparing snd) (assocs arr)
